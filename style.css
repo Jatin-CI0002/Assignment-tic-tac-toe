@@ -1,0 +1,117 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap");
+* {
+  font-family: "Roboto Condensed", sans-serif;
+}
+html,
+body {
+  height: 100%;
+  background-color: #bee9e8;
+  background-repeat: repeat;
+  box-shadow: inset 0 0 0 1000px rgba(190, 233, 232, 0.4);
+  background: url("https://img.freepik.com/free-vector/white-gray-background-with-diagonal-lines-pattern_1017-25100.jpg?w=1060&t=st=1662701792~exp=1662702392~hmac=39d3b81310b4d821d508acb75af04582848f7990479f39d9443c0467f0be1079");
+}
+
+header,
+main,
+section {
+  margin-top: 5%;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: lighter;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: repeat(4, 1fr);
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  width: 100%;
+  height: 100%;
+}
+
+.welcome {
+  grid-area: 1 / 1 / 2 / 3;
+}
+
+.turn {
+  grid-area: 4 / 1 / 5 / 3;
+}
+
+.grid {
+  grid-area: 2 / 1 / 4 / 3;
+}
+
+.score {
+  grid-area: 2 / 2 / 4 / 3;
+  margin: 10%;
+}
+
+.game-grid {
+  grid-area: 2 / 1 / 4 / 2;
+  display: grid;
+  width: 40%;
+  height: 100%;
+  margin-left: 40%;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 0px 0px;
+}
+
+.game-grid :nth-child(1) {
+  border-top-left-radius: 15px;
+}
+
+.game-grid :nth-child(3) {
+  border-top-right-radius: 15px;
+}
+
+.game-grid :nth-child(7) {
+  border-bottom-left-radius: 15px;
+}
+
+.game-grid :nth-child(9) {
+  border-bottom-right-radius: 15px;
+}
+
+ul > li {
+  list-style: none;
+  width: 100%;
+  text-align: left;
+}
+
+.box {
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3em;
+  background-color: #caf0f8;
+  border: 1px solid #62b6cb;
+  cursor: pointer;
+}
+
+.box:hover{
+  background-color: rgba(98, 182, 203, 0.1);
+}
+
+button {
+  background: #bee9e8;
+  font-size: 1.2em;
+  border: 1px solid #62b6cb;
+  border-radius: 10px;
+  cursor: pointer;
+  height: 40%;
+}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <title>Welcome | Tic Tac Toe</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="welcome"><header><h1>Welcome to Tic Tac Toe Game :)</h1></header></div>
+      <div class="game-grid">
+        <div cell-index = "0" class="box"></div>
+        <div cell-index = "1" class="box"></div>
+        <div cell-index = "2" class="box"></div>
+        <div cell-index = "3" class="box"></div>
+        <div cell-index = "4" class="box"></div>
+        <div cell-index = "5" class="box"></div>
+        <div cell-index = "6" class="box"></div>
+        <div cell-index = "7" class="box"></div>
+        <div cell-index = "8" class="box"></div>
+      </div>
+      <div class="score">
+        <h2>ScoreBoard</h2>
+            <h3>
+              <ul id="threeScore">
+                <li><b>x</b> wins <span id="xWins">0</span> times</li>
+                <li><b>0</b> wins <span id="oWins">0</span> times</li>
+              </ul>
+            </h3>
+      </div>
+      <div class="turn">
+        <h2><span id="player"></span></h2>
+            <button class="restart-game">Restart Game</button>
+          </div>
+      </div>
+    </div>
+    <script src="script.js" type="text/javascript"></script>
+  </body>
+</html>
