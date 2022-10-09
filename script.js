@@ -3,15 +3,13 @@ let xWins = document.getElementById("xWins");
 let oWins = document.getElementById("oWins");
 let gameActive = true;
 let gameState = ["", "", "", "", "", "", "", "", ""];
-let currentPlayer = "X";
+let currentPlayer = "x";
+let computer = "o";
 let xWin = 0;
 let oWin = 0;
 
 const winningMessage = () => `Player ${currentPlayer} has won!`;
 const drawMessage = () => `Game ended in a draw!`;
-const currentPlayerTurn = () => `It's ${currentPlayer}'s turn`;
-
-// playerDisplay.innerHTML = currentPlayerTurn();
 
 const winningConditions = [
   [0, 1, 2],
@@ -24,86 +22,112 @@ const winningConditions = [
   [2, 4, 6],
 ];
 
-function cellPlayed(cell, cellIndex) {
-    gameState[cellIndex] = currentPlayer;
-    cell.innerHTML = currentPlayer;
+async function cellPlayed(cell, cellIndex) {
+    let computerIndex = 0;
+  gameState[cellIndex] = currentPlayer;
+  cell.innerHTML = currentPlayer;
+
+  const response = await fetch("http://localhost:55597/api/getindex", {
+    method: "POST",
+    mode:"cors",
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(gameState)
+  });
+
+  response.json().then((data) => {
+    makeComputerMove(computerIndex,data);
+  }).catch((err)=> console.log(err))
+  ;
 }
 
-function playerChange() {
-    currentPlayer = currentPlayer === "X" ? "O" : "X";
-    playerDisplay.innerHTML = currentPlayerTurn();
-}
+function makeComputerMove(computerIndex,data)
+{
+    if(data.row == 0)
+        computerIndex = data.row + data.col;
 
-function result() {
-    let win = false;
-    for(let i = 0; i <= 7; i++)
-    {
-        const winCondition = winningConditions[i];
-        let first = gameState[winCondition[0]];
-        let second = gameState[winCondition[1]];
-        let third = gameState[winCondition[2]];
+    if(data.row == 1)
+        computerIndex = data.row + data.col + 2;
 
-        if(first === '' || second === '' || third === '')
-            continue;
+    if(data.row == 2)
+        computerIndex = data.row + data.col + 4;
 
-        if(first === second && second === third)
-        {
-            win = true;
-            break;
-        }
-    }
-
-    if(win)
-    {
-        if(currentPlayer === "X")
-            xWin++;
-
-        else
-            oWin++;
-        
-        console.log(playerDisplay.innerText);
-        playerDisplay.innerHTML = winningMessage();
-        xWins.innerHTML = xWin;
-        oWins.innerHTML = oWin;
-        console.log(playerDisplay.innerText);
-        console.log(xWin);
-        console.log(oWin);  
-        gameActive = false;
-        return;
-    }
-
-    let draw = !gameState.includes("");
-    if(draw)
-    {
-        playerDisplay.innerHTML = drawMessage();
-        gameActive = false;
-        return;
-    }
-
-    playerChange();
-}
-
-function cellClick(clickedCellEvent) {
-    const cell = clickedCellEvent.target;
-
-    const cellIndex = parseInt(cell.getAttribute('cell-index'));
-
-    if(gameState[cellIndex] !== "" || !gameActive)
-        return;
-
-    cellPlayed(cell, cellIndex);
+    // currentPlayer = playerChange();
+    // playerChange();
+    gameState[computerIndex] = computer;
+    document.getElementById(computerIndex).innerHTML = computer;
     result();
 }
 
-function restartGame() {
-    gameActive = true;
-    currentPlayer = "X";
-    gameState = ["", "", "", "", "", "", "", "", ""];
-    playerDisplay.innerHTML = currentPlayerTurn();
-    document.querySelectorAll('.box').forEach(cell => cell.innerHTML = "");
-    
+function playerChange() {
+  currentPlayer = currentPlayer === "x" ? "o" : "x";
 }
 
-document.querySelectorAll('.box').forEach(cell => cell.addEventListener('click',cellClick));
-document.querySelector('.restart-game').addEventListener('click', restartGame);
+function result() {
+  let win = false;
+  for (let i = 0; i <= 7; i++) {
+    const winCondition = winningConditions[i];
+    let first = gameState[winCondition[0]];
+    let second = gameState[winCondition[1]];
+    let third = gameState[winCondition[2]];
 
+    if (first === "" || second === "" || third === "") continue;
+
+    if (first === second && second === third) {
+      win = true;
+      if (first === "x")
+      {
+        xWin++;
+        playerDisplay.innerHTML = `Player x has won!`;
+      }
+      else
+      {
+        oWin++;
+        playerDisplay.innerHTML = `Player o has won!`;
+      }
+      break;
+    }
+  }
+
+  if (win) {
+    xWins.innerHTML = xWin;
+    oWins.innerHTML = oWin;
+    gameActive = false;
+    return;
+  }
+
+  let draw = !gameState.includes("");
+  if (draw) {
+    playerDisplay.innerHTML = drawMessage();
+    gameActive = false;
+    return;
+  }
+
+
+}
+
+function cellClick(clickedCellEvent) {
+
+  const cell = clickedCellEvent.target;
+  const cellIndex = parseInt(cell.getAttribute("cell-index"));
+
+  if (gameState[cellIndex] !== "" || !gameActive) return;
+
+  cellPlayed(cell, cellIndex);
+  result();
+}
+
+function restartGame() {
+  gameActive = true;
+  currentPlayer = "x";
+  gameState = ["", "", "", "", "", "", "", "", ""];
+  playerDisplay.innerHTML = currentPlayerTurn();
+  document.querySelectorAll(".box").forEach((cell) => (cell.innerHTML = ""));
+}
+
+document
+  .querySelectorAll(".box")
+  .forEach((cell) => cell.addEventListener("click", cellClick));
+document.querySelector(".restart-game").addEventListener("click", restartGame);
