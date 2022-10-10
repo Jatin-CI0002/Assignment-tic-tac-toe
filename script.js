@@ -27,7 +27,7 @@ async function cellPlayed(cell, cellIndex) {
   gameState[cellIndex] = currentPlayer;
   cell.innerHTML = currentPlayer;
 
-  const response = await fetch("http://localhost:55597/api/getindex", {
+  const response = await fetch("http://localhost:36812/api/getindex", {
     method: "POST",
     mode:"cors",
     headers: {
