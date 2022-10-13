@@ -5,6 +5,8 @@ let gameActive = true;
 let gameState = ["", "", "", "", "", "", "", "", ""];
 let currentPlayer = "x";
 let computer = "o";
+let winner = "";
+let loser = "";
 let xWin = 0;
 let oWin = 0;
 
@@ -38,7 +40,8 @@ async function cellPlayed(cell, cellIndex) {
   });
 
   response.json().then((data) => {
-    makeComputerMove(computerIndex,data);
+    if(gameActive)
+      makeComputerMove(computerIndex,data);
   }).catch((err)=> console.log(err))
   ;
 }
@@ -65,7 +68,7 @@ function playerChange() {
   currentPlayer = currentPlayer === "x" ? "o" : "x";
 }
 
-function result() {
+async function result() {
   let win = false;
   for (let i = 0; i <= 7; i++) {
     const winCondition = winningConditions[i];
@@ -80,11 +83,15 @@ function result() {
       if (first === "x")
       {
         xWin++;
+        winner = "x";
+        loser = "o";
         playerDisplay.innerHTML = `Player x has won!`;
       }
       else
       {
         oWin++;
+        winner = "o";
+        loser = "x";
         playerDisplay.innerHTML = `Player o has won!`;
       }
       break;
@@ -94,18 +101,25 @@ function result() {
   if (win) {
     xWins.innerHTML = xWin;
     oWins.innerHTML = oWin;
+    let object = {
+      "winner": winner,
+      "loser": loser,
+      "xCount": xWin,
+      "oCount":oWin
+    }
+    SaveData(object);
     gameActive = false;
     return;
   }
 
   let draw = !gameState.includes("");
   if (draw) {
+    let object = {}
+    SaveData(object);
     playerDisplay.innerHTML = drawMessage();
     gameActive = false;
     return;
   }
-
-
 }
 
 function cellClick(clickedCellEvent) {
@@ -114,20 +128,34 @@ function cellClick(clickedCellEvent) {
   const cellIndex = parseInt(cell.getAttribute("cell-index"));
 
   if (gameState[cellIndex] !== "" || !gameActive) return;
-
   cellPlayed(cell, cellIndex);
   result();
 }
 
 function restartGame() {
   gameActive = true;
-  currentPlayer = "x";
   gameState = ["", "", "", "", "", "", "", "", ""];
-  playerDisplay.innerHTML = currentPlayerTurn();
+  // playerDisplay.innerHTML = currentPlayerTurn();
   document.querySelectorAll(".box").forEach((cell) => (cell.innerHTML = ""));
 }
 
-document
-  .querySelectorAll(".box")
-  .forEach((cell) => cell.addEventListener("click", cellClick));
+async function SaveData(object)
+{
+  const response = await fetch("http://localhost:36812/api/winner", {
+  method: "POST",
+  mode:"cors",
+  headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(object)
+});
+response.json().then((data) => {
+  if(data != null)
+    console.log(data);
+}).catch((err)=> console.log(err))
+;
+}
+
+document.querySelectorAll(".box").forEach((cell) => cell.addEventListener("click", cellClick));
 document.querySelector(".restart-game").addEventListener("click", restartGame);
