@@ -29,7 +29,7 @@ async function cellPlayed(cell, cellIndex) {
   gameState[cellIndex] = currentPlayer;
   cell.innerHTML = currentPlayer;
 
-  const response = await fetch("http://localhost:36812/api/getindex", {
+  const response = await fetch("http://localhost:36812/api/nextmove", {
     method: "POST",
     mode:"cors",
     headers: {
@@ -42,8 +42,7 @@ async function cellPlayed(cell, cellIndex) {
   response.json().then((data) => {
     if(gameActive)
       makeComputerMove(computerIndex,data);
-  }).catch((err)=> console.log(err))
-  ;
+  }).catch((err)=> console.log(err));
 }
 
 function makeComputerMove(computerIndex,data)
@@ -57,8 +56,6 @@ function makeComputerMove(computerIndex,data)
     if(data.row == 2)
         computerIndex = data.row + data.col + 4;
 
-    // currentPlayer = playerChange();
-    // playerChange();
     gameState[computerIndex] = computer;
     document.getElementById(computerIndex).innerHTML = computer;
     result();
@@ -141,7 +138,7 @@ function restartGame() {
 
 async function SaveData(object)
 {
-  const response = await fetch("http://localhost:36812/api/winner", {
+  const response = await fetch("http://localhost:36812/api/score", {
   method: "POST",
   mode:"cors",
   headers: {
