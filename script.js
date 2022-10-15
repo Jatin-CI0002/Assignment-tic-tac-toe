@@ -7,6 +7,7 @@ let currentPlayer = "x";
 let computer = "o";
 let winner = "";
 let loser = "";
+let gameString = "";
 let xWin = 0;
 let oWin = 0;
 
@@ -98,11 +99,13 @@ async function result() {
   if (win) {
     xWins.innerHTML = xWin;
     oWins.innerHTML = oWin;
+    ConvertToString(gameState);
     let object = {
       "winner": winner,
       "loser": loser,
       "xCount": xWin,
-      "oCount":oWin
+      "oCount":oWin,
+      "GameState":gameString
     }
     SaveData(object);
     gameActive = false;
@@ -111,10 +114,14 @@ async function result() {
 
   let draw = !gameState.includes("");
   if (draw) {
-    let object = {}
+    ConvertToString(gameState);
+    let object = {
+      "GameState":gameString
+    }
     SaveData(object);
     playerDisplay.innerHTML = drawMessage();
     gameActive = false;
+    gameString = "";
     return;
   }
 }
@@ -132,10 +139,20 @@ function cellClick(clickedCellEvent) {
 function restartGame() {
   gameActive = true;
   gameState = ["", "", "", "", "", "", "", "", ""];
+  gameString = "";
   // playerDisplay.innerHTML = currentPlayerTurn();
   document.querySelectorAll(".box").forEach((cell) => (cell.innerHTML = ""));
 }
 
+function ConvertToString(gameArr)
+{
+  gameArr.forEach(element => {
+    if(element != "")
+      gameString += element;
+    else
+      gameString += "_";
+  });
+}
 async function SaveData(object)
 {
   const response = await fetch("http://localhost:36812/api/score", {
